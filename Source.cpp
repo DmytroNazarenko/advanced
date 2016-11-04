@@ -17,7 +17,7 @@ typedef long double ld;
 
 int main()
 {
-    std::vector<int> _a;
+    std::vector<int> L;
     int ***mas = new int **[110];
     for (int i = 0;i < 110; ++i) {
         mas[i] = new int *[310];
@@ -28,10 +28,10 @@ int main()
     int N, M, D;
     std::cin >> M >> D;
     std::cin >> N;
-    for (int _i = 0; _i < N; ++_i) {
-        int _k;
-        std::cin >> _k;
-        _a.push_back(_k);
+    for (int i = 0; i < N; ++i) {
+        int k;
+        std::cin >> k;
+        L.push_back(k);
     }
     mas[0][0][0] = 0;
     for (int i = 0; i < M; ++i) {
@@ -42,14 +42,10 @@ int main()
             for (int k = 1; k <= D; ++k) {
                 mas[i][j][k] = mas[i][j][k - 1];
                 if (j > 0) mas[i][j][k] = std::max(mas[i][j][k], mas[i][j - 1][k]);
-                if (j > 0 && k >= _a[j - 1]) mas[i][j][k] =
-                    std::max(mas[i][j][k], mas[i][j - 1][k - _a[j - 1]] + 1);
+                if (j > 0 && k >= L[j - 1]) mas[i][j][k] =
+                    std::max(mas[i][j][k], mas[i][j - 1][k - L[j - 1]] + 1);
             }
         }
     }
     std::cout << mas[M - 1][N][D];
 }
-
-
-
-
