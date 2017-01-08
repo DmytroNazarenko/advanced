@@ -1,51 +1,53 @@
 #include <iostream>
 #include <algorithm>
-#include <set>
-#include <map>
-#include <string>
 #include <math.h>
-#include <fstream>
-#include <queue>
 #include <vector>
-#include <cstring>
-#include <iomanip>
 typedef long long ll;
-typedef long long ull;
-typedef long double ld;
 
 
+void input(int &n, int &m, int &d, std::vector<int> &l) {
+    std::cin >> m >> d >> n;
+    for (int counter = 0; counter < n; ++counter) {
+        int _k;
+        std::cin >> _k;
+        l.push_back(_k);
+    }
+}
+
+int maxPeopleCount[110][310][310];
+
+int findMaxPeopleCount(int people, int buses, int busCapacity, std::vector<int> peopleVolumes) {
+    maxPeopleCount[0][0][0] = 0;
+    for (int filledBusesCount = 0; filledBusesCount < buses; ++filledBusesCount) {
+        for (int analyzedPeopleCount = 0; analyzedPeopleCount <= people; ++analyzedPeopleCount) {
+            if (filledBusesCount != 0)
+                maxPeopleCount[filledBusesCount][analyzedPeopleCount][0] =
+                maxPeopleCount[filledBusesCount - 1][analyzedPeopleCount][busCapacity];
+            else
+                maxPeopleCount[filledBusesCount][analyzedPeopleCount][0] = 0;
+            for (int usedVolumeInBus = 1; usedVolumeInBus <= busCapacity; ++usedVolumeInBus) {
+                maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus] =
+                    maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus - 1];
+                if (analyzedPeopleCount > 0)
+                    maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus] =
+                    std::max(maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus],
+                        maxPeopleCount[filledBusesCount][analyzedPeopleCount - 1][usedVolumeInBus]);
+
+                if (analyzedPeopleCount > 0 && usedVolumeInBus >= peopleVolumes[analyzedPeopleCount - 1])
+                    maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus] =
+                    std::max(maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus],
+                        maxPeopleCount[filledBusesCount][analyzedPeopleCount - 1][usedVolumeInBus
+                        - peopleVolumes[analyzedPeopleCount - 1]] + 1);
+            }
+        }
+    }
+    return  maxPeopleCount[buses - 1][people][busCapacity];
+}
 
 int main()
 {
     std::vector<int> L;
-    int ***mas = new int **[110];
-    for (int i = 0;i < 110; ++i) {
-        mas[i] = new int *[310];
-        for (int j = 0;j < 310; ++j) {
-            mas[i][j] = new int[310];
-        }
-    }
     int N, M, D;
-    std::cin >> M >> D;
-    std::cin >> N;
-    for (int i = 0; i < N; ++i) {
-        int k;
-        std::cin >> k;
-        L.push_back(k);
-    }
-    mas[0][0][0] = 0;
-    for (int i = 0; i < M; ++i) {
-        for (int j = 0; j <= N; ++j) {
-            if (i != 0) mas[i][j][0] = mas[i - 1][j][D];
-            else
-                mas[i][j][0] = 0;
-            for (int k = 1; k <= D; ++k) {
-                mas[i][j][k] = mas[i][j][k - 1];
-                if (j > 0) mas[i][j][k] = std::max(mas[i][j][k], mas[i][j - 1][k]);
-                if (j > 0 && k >= L[j - 1]) mas[i][j][k] =
-                    std::max(mas[i][j][k], mas[i][j - 1][k - L[j - 1]] + 1);
-            }
-        }
-    }
-    std::cout << mas[M - 1][N][D];
+    input(N, M, D, L);
+    std::cout << findMaxPeopleCount(N, M, D, L);
 }
