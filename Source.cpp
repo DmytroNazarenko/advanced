@@ -1,22 +1,29 @@
 #include <iostream>
 #include <algorithm>
 #include <math.h>
+#include <iostream>
 #include <vector>
 typedef long long ll;
 
 
-void input(int &n, int &m, int &d, std::vector<int> &l) {
-    std::cin >> m >> d >> n;
-    for (int counter = 0; counter < n; ++counter) {
+void input(std::istream &inputStream, int &people, int &buses, int &busCapacity, std::vector<int> &volumes) {
+    inputStream >> buses >> busCapacity >> people;
+    for (int counter = 0; counter < people; ++counter) {
         int _k;
-        std::cin >> _k;
-        l.push_back(_k);
+        inputStream >> _k;
+        volumes.push_back(_k);
     }
 }
 
-int maxPeopleCount[110][310][310];
+void output(std::ostream &outputStream, const int &answer) {
+    outputStream << answer;
+}
 
-int findMaxPeopleCount(int people, int buses, int busCapacity, std::vector<int> peopleVolumes) {
+
+int findMaxPeopleCount(const int people, const int buses, const int busCapacity, const std::vector<int> peopleVolumes) {
+
+    std::vector<std::vector<std::vector<int> > > maxPeopleCount(buses + 5, std::vector<std::vector<int> >(people + 5, std::vector<int>(busCapacity + 5)));
+
     maxPeopleCount[0][0][0] = 0;
     for (int filledBusesCount = 0; filledBusesCount < buses; ++filledBusesCount) {
         for (int analyzedPeopleCount = 0; analyzedPeopleCount <= people; ++analyzedPeopleCount) {
@@ -46,8 +53,8 @@ int findMaxPeopleCount(int people, int buses, int busCapacity, std::vector<int> 
 
 int main()
 {
-    std::vector<int> L;
-    int N, M, D;
-    input(N, M, D, L);
-    std::cout << findMaxPeopleCount(N, M, D, L);
+    std::vector<int> peopleVolumes;
+    int peopleCount, busCount, busCapacity;
+    input(std::cin, peopleCount, busCount, busCapacity, peopleVolumes);
+    output(std::cout, findMaxPeopleCount(peopleCount, busCount, busCapacity, peopleVolumes));
 }
