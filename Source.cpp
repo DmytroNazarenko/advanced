@@ -36,7 +36,7 @@ int findMaxPeopleCount(const int people, const int buses, const int busCapacity,
                     maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus] =
                         std::max(maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus],
                             maxPeopleCount[filledBusesCount][analyzedPeopleCount - 1][usedVolumeInBus]
-                                );
+                        );
                 }
                 if (analyzedPeopleCount > 0 && usedVolumeInBus >= peopleVolumes[analyzedPeopleCount - 1]) {
                     maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus] =
@@ -48,7 +48,7 @@ int findMaxPeopleCount(const int people, const int buses, const int busCapacity,
                             ][
                                 usedVolumeInBus - peopleVolumes[analyzedPeopleCount - 1]
                             ] + 1
-                                );
+                        );
                 }
             }
         }
