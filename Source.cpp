@@ -1,17 +1,13 @@
 #include <iostream>
 #include <algorithm>
-#include <math.h>
-#include <iostream>
 #include <vector>
-typedef long long ll;
 
 
 void input(std::istream &inputStream, int &people, int &buses, int &busCapacity, std::vector<int> &volumes) {
     inputStream >> buses >> busCapacity >> people;
+    volumes.resize(people);
     for (int counter = 0; counter < people; ++counter) {
-        int _k;
-        inputStream >> _k;
-        volumes.push_back(_k);
+        inputStream >> volumes[counter];
     }
 }
 
@@ -39,13 +35,20 @@ int findMaxPeopleCount(const int people, const int buses, const int busCapacity,
                 if (analyzedPeopleCount > 0) {
                     maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus] =
                         std::max(maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus],
-                            maxPeopleCount[filledBusesCount][analyzedPeopleCount - 1][usedVolumeInBus]);
+                            maxPeopleCount[filledBusesCount][analyzedPeopleCount - 1][usedVolumeInBus]
+                                );
                 }
                 if (analyzedPeopleCount > 0 && usedVolumeInBus >= peopleVolumes[analyzedPeopleCount - 1]) {
                     maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus] =
                         std::max(maxPeopleCount[filledBusesCount][analyzedPeopleCount][usedVolumeInBus],
-                            maxPeopleCount[filledBusesCount][analyzedPeopleCount - 1][usedVolumeInBus
-                            - peopleVolumes[analyzedPeopleCount - 1]] + 1);
+                            maxPeopleCount[
+                                filledBusesCount
+                            ][
+                                analyzedPeopleCount - 1
+                            ][
+                                usedVolumeInBus - peopleVolumes[analyzedPeopleCount - 1]
+                            ] + 1
+                                );
                 }
             }
         }
